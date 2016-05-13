@@ -171,7 +171,6 @@
   function Zoom (img) {
     this._fullHeight      =
     this._fullWidth       =
-    this._overlay         =
     this._targetImageWrap = null
 
     this._targetImage = img
@@ -179,7 +178,7 @@
     this._$body = $(document.body)
   }
 
-  Zoom.OFFSET = 80
+  Zoom.OFFSET = 15
   Zoom._MAX_WIDTH = 2560
   Zoom._MAX_HEIGHT = 4096
 
@@ -190,7 +189,9 @@
       this._fullWidth = Number(img.width)
       this._zoomOriginal()
     }, this)
-    img.src = this._targetImage.src
+    img.src = this._targetImage.currentSrc || this._targetImage.src
+    console.log(this._targetImage.currentSrc)
+    console.log(this._targetImage.src)
   }
 
   Zoom.prototype._zoomOriginal = function () {
@@ -203,11 +204,6 @@
     $(this._targetImage)
       .addClass('zoom-img')
       .attr('data-action', 'zoom-out')
-
-    this._overlay           = document.createElement('div')
-    this._overlay.className = 'zoom-overlay'
-
-    document.body.appendChild(this._overlay)
 
     this._calculateZoom()
     this._triggerAnimation()
@@ -315,7 +311,6 @@
         .attr('data-action', 'zoom')
 
       this._targetImageWrap.parentNode.replaceChild(this._targetImage, this._targetImageWrap)
-      this._overlay.parentNode.removeChild(this._overlay)
 
       this._$body.removeClass('zoom-overlay-transitioning')
     }
