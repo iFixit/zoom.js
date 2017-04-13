@@ -121,7 +121,14 @@
 
 		function zoomImage() {
 			var img = document.createElement('img')
+
+ 			var onloadOnce = false;
 			img.onload = function () {
+				if (onloadOnce) {
+					return;
+				}
+				onloadOnce = true;
+
 				fullHeight = Number(img.height)
 				fullWidth = Number(img.width)
 				zoomOriginal()
