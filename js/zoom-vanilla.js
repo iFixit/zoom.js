@@ -122,11 +122,13 @@
 		function zoomImage() {
 			var img = document.createElement('img')
 			img.onload = function () {
-				fullHeight = Number(img.height)
-				fullWidth = Number(img.width)
+				fullHeight = targetImage.getAttribute('data-full-height') // Number(img.height)
+				fullWidth = targetImage.getAttribute('data-full-width') // Number(img.width)
 				zoomOriginal()
 			}
-			img.src = targetImage.currentSrc || targetImage.src
+ 			img.setAttribute('sizes', targetImage.getAttribute('sizes'));
+ 			img.setAttribute('srcset', targetImage.getAttribute('srcset'));
+ 			img.src = targetImage.src;
 		}
 
 		function zoomOriginal() {
