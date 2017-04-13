@@ -35,7 +35,7 @@
 		function zoom(event) {
 			event.stopPropagation()
 
-			if (document.body.classList.contains('zoom-overlay-open')) return
+			if (document.body.classList.contains('zoom-overlay-active')) return
 			if (event.target.width >= (window.innerWidth - OFFSET)) return
 
 			if (event.metaKey || event.ctrlKey) return openInNewWindow()
@@ -120,6 +120,7 @@
 		var targetImageClone = null
 
 		function zoomImage() {
+			document.body.classList.add('zoom-overlay-active');
 			var img = document.createElement('img')
 
  			var onloadOnce = false;
@@ -252,6 +253,7 @@
 			overlay.parentNode.removeChild(overlay)
 
 			document.body.classList.remove('zoom-overlay-transitioning')
+			document.body.classList.remove('zoom-overlay-active');
 		}
 
 		return function (target) {
