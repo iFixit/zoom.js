@@ -165,6 +165,8 @@
 
 			calculateZoom()
 			triggerAnimation()
+
+			window.addEventListener('resize', resizeHandler);
 		}
 
 		function calculateZoom() {
@@ -193,7 +195,7 @@
 		function triggerAnimation() {
 			targetImage.offsetWidth // repaint before animating
 
-			var imageOffset = offset(targetImage)
+			var imageOffset = offset(targetImageClone)
 			var scrollTop   = window.pageYOffset
 
 			var viewportY = scrollTop + (window.innerHeight / 2)
@@ -221,6 +223,8 @@
 		}
 
 		function close() {
+			window.removeEventListener('resize', resizeHandler);
+
 			document.body.classList.remove('zoom-overlay-open')
 			document.body.classList.add('zoom-overlay-transitioning')
 
@@ -254,6 +258,14 @@
 
 			document.body.classList.remove('zoom-overlay-transitioning')
 			document.body.classList.remove('zoom-overlay-active');
+		}
+
+		function resizeHandler() {
+			targetImageWrap.style.top = offset(targetImageClone).top + 'px'
+			targetImageWrap.style.left = offset(targetImageClone).left + 'px'
+
+			calculateZoom()
+			triggerAnimation()
 		}
 
 		return function (target) {
