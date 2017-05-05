@@ -147,26 +147,30 @@
 			targetImageWrap.style.left = offset(targetImage).left + 'px'
 
 			targetImageClone = targetImage.cloneNode()
-			targetImageClone.style.visibility = 'hidden'
 
 			targetImage.style.width = targetImage.offsetWidth + 'px'
 			targetImage.parentNode.replaceChild(targetImageClone, targetImage)
 
-			document.body.appendChild(targetImageWrap)
-			targetImageWrap.appendChild(targetImage)
+			// Using setTimeout to fix Firefox repaint bug
+			setTimeout(function() {
+				targetImageClone.style.visibility = 'hidden'
 
-			targetImage.classList.add('zoom-img')
-			targetImage.setAttribute('data-action', 'zoom-out')
+				document.body.appendChild(targetImageWrap)
+				targetImageWrap.appendChild(targetImage)
 
-			overlay = document.createElement('div')
-			overlay.className = 'zoom-overlay'
+				targetImage.classList.add('zoom-img')
+				targetImage.setAttribute('data-action', 'zoom-out')
 
-			document.body.appendChild(overlay)
+				overlay = document.createElement('div')
+				overlay.className = 'zoom-overlay'
 
-			calculateZoom()
-			triggerAnimation()
+				document.body.appendChild(overlay)
 
-			window.addEventListener('resize', resizeHandler);
+				calculateZoom()
+				triggerAnimation()
+
+				window.addEventListener('resize', resizeHandler);
+			});
 		}
 
 		function calculateZoom() {
