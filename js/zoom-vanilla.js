@@ -43,9 +43,9 @@
 			closeActiveZoom({ forceDispose: true })
 
 			activeZoom = vanillaZoom(event.target)
-			activeZoom.zoomImage()
-
-			addCloseActiveZoomListeners()
+			activeZoom.zoomImage({
+				onZoomStart: addCloseActiveZoomListeners
+			})
 		}
 
 		function openInNewWindow() {
@@ -119,7 +119,7 @@
 		var targetImageWrap = null
 		var targetImageClone = null
 
-		function zoomImage() {
+		function zoomImage(options) {
 			document.body.classList.add('zoom-overlay-active');
 			var img = document.createElement('img')
 
@@ -132,14 +132,14 @@
 
 				fullHeight = targetImage.getAttribute('data-full-height') // Number(img.height)
 				fullWidth = targetImage.getAttribute('data-full-width') // Number(img.width)
-				zoomOriginal()
+				zoomOriginal(options)
 			}
  			img.setAttribute('sizes', targetImage.getAttribute('sizes'));
  			img.setAttribute('srcset', targetImage.getAttribute('srcset'));
  			img.src = targetImage.src;
 		}
 
-		function zoomOriginal() {
+		function zoomOriginal(options) {
 			targetImageWrap = document.createElement('div')
 			targetImageWrap.className = 'zoom-img-wrap'
 			targetImageWrap.style.position = 'absolute'
@@ -170,6 +170,7 @@
 				triggerAnimation()
 
 				window.addEventListener('resize', resizeHandler);
+				options.onZoomStart()
 			});
 		}
 
@@ -226,6 +227,8 @@
 			document.body.classList.add('zoom-overlay-open')
 		}
 
+		var disposeTimeout = null
+
 		function close() {
 			window.removeEventListener('resize', resizeHandler);
 
@@ -244,11 +247,14 @@
 
 			targetImage.addEventListener('transitionend', dispose)
 			targetImage.addEventListener('webkitTransitionEnd', dispose)
+			// fallback if transitionend doesn't fire
+			disposeTimeout = setTimeout(dispose, 350)
 		}
 
 		function dispose() {
 			targetImage.removeEventListener('transitionend', dispose)
 			targetImage.removeEventListener('webkitTransitionEnd', dispose)
+			clearTimeout(disposeTimeout)
 
 			if (!targetImageWrap || !targetImageWrap.parentNode) return
 
