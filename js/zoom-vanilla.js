@@ -130,8 +130,8 @@
 				}
 				onloadOnce = true;
 
-				fullHeight = targetImage.getAttribute('data-full-height') // Number(img.height)
-				fullWidth = targetImage.getAttribute('data-full-width') // Number(img.width)
+				fullHeight = targetImage.getAttribute('data-full-height') || Number(img.height)
+				fullWidth = targetImage.getAttribute('data-full-width') || Number(img.width)
 				zoomOriginal(options)
 			}
  			img.setAttribute('sizes', targetImage.getAttribute('sizes'));
